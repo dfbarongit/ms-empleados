@@ -1,0 +1,27 @@
+### Iniciar sesión con usuario o correo
+GET http://127.0.0.1:8000/empleados
+Content-Type: application/json
+
+{
+  "usuario": "usuario_existente",
+  "contrasena": "contraseña"
+}
+### Iniciar sesión con usuario o correo
+POST http://127.0.0.1:8000/auth/login
+Content-Type: application/json
+
+{
+  "usuario": "gestionhumana",
+  "contrasena": "gh123"
+}
+
+### Validar sesión (pega el token recibido)
+GET http://127.0.0.1:8000/auth/validate
+Authorization: Bearer 19007215e8cbdbde5a7c32fd7fa7b02178c27ca42091b4181380ba8b4855c0e0
+
+### Cerrar sesión (después de esto, el paso 2 debe dar 401)
+POST http://127.0.0.1:8000/auth/logout
+Authorization: Bearer 19007215e8cbdbde5a7c32fd7fa7b02178c27ca42091b4181380ba8b4855c0e0
+
+###hola mundo
+GET http://127.0.0.1:8000/
