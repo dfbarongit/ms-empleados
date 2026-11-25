@@ -5,22 +5,30 @@ namespace App\Controllers;
 use App\Models\Empleado;
 use Exception;
 use Illuminate\Database\Eloquent\Collection;
+use DateTime;
 
 class EmpleadosController
 {
     function create(array $data): Empleado
     {
         $empleado = new Empleado();
-        $empleado->nombre = $data["nombre"];
-        $empleado->username = $data["username"];
-        $empleado->password = $data["password"];
+        $empleado->nombres = $data["nombres"];
+        $empleado->apellidos = $data["apellidos"];
+        $empleado->documento = $data["documento"];
+        $empleado->correo = $data["correo"];
+        $empleado->telefono = $data["telefono"];
+        $empleado->cargo = $data["cargo"];
+        $empleado->area = $data["area"];
+        $empleado->fecha_ingreso = new DateTime($data["fecha_ingreso"]);
         $empleado->save();
         return $empleado;
     }
-    function get_empleados():Collection{
+    function get_empleados(): Collection
+    {
         return Empleado::all();
     }
-    function update(int $id, array $data):Empleado{
+    function update(int $id, array $data): Empleado
+    {
         $empleado = Empleado::findOrFail($id);
         $empleado->nombre = $data["nombre"];
         $empleado->username = $data["username"];
@@ -28,16 +36,17 @@ class EmpleadosController
         $empleado->save();
         return $empleado;
     }
-    function setEstado(int $id):Empleado{
+    function setEstado(int $id): Empleado
+    {
         $empleado = Empleado::findOrFail($id);
         if ($empleado->estado == "activo") {
             $empleado->estado = "inactivo";
-        } else if ( $empleado->estado == "inactivo") {
+        } else if ($empleado->estado == "inactivo") {
             $empleado->estado = "activo";
         } else {
             throw new Exception("El estado no es válido");
         }
-        
+
         $empleado->save();
         return $empleado;
     }
@@ -47,7 +56,8 @@ class EmpleadosController
         return Empleado::where("documento", $documento)->orWhere("area", $area)->orWhere("estado", $estado)->firstOrFail();
     }
 
-    function delete(int $id):User{
+    function delete(int $id): User
+    {
         $user = User::findOrFail($id);
         $user->delete();
         return $user;

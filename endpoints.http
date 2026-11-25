@@ -6,14 +6,24 @@ Content-Type: application/json
   "usuario": "usuario_existente",
   "contrasena": "contraseña"
 }
-### Iniciar sesión con usuario o correo
-POST http://127.0.0.1:8000/auth/login
+### Crear un nuevo empleado
+POST http://127.0.0.1:8000/empleados
 Content-Type: application/json
 
 {
-  "usuario": "gestionhumana",
-  "contrasena": "gh123"
+  "nombres": "miNombbre",
+  "apellidos": "miApellido",
+  "documento": "miDocumento",
+  "correo": "miCorreo",
+  "telefono": "12345",
+  "cargo": "miCargo",
+  "area": "miArea",
+  "fecha_ingreso": "2024-07-14",
 }
+
+POST http://127.0.0.1:8000/empleados/1
+
+POST http://127.0.0.1:8000/empleados/1/estado
 
 ### Validar sesión (pega el token recibido)
 GET http://127.0.0.1:8000/auth/validate
