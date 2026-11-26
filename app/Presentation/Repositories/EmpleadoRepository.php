@@ -19,6 +19,8 @@ class EmpleadoRepository
             $row = $controller->create($data);
             $response->getBody()->write($row->toJson());
             return $response->withHeader("Content-Type", "application/json");
+        } catch (\DomainException $ex) {
+            return $this->conflictResponse($response, $ex);
         } catch (ModelNotFoundException $ex) {
             return $response->withStatus(406);
         }
@@ -26,8 +28,19 @@ class EmpleadoRepository
 
     public function get(Request $request, Response $response, $args): Response
     {
+        $filters = $request->getQueryParams();
+        $allowedFilters = ["documento", "area", "estado"];
+        foreach ($filters as $key => $value) {
+            if (!in_array($key, $allowedFilters, true) || !is_string($value) || trim($value) === "") {
+                $response->getBody()->write(json_encode([
+                    "error" => "Use los filtros documento, area o estado con valores de texto no vacíos."
+                ]));
+                return $response->withStatus(400)->withHeader("Content-Type", "application/json");
+            }
+        }
+
         $controller = new EmpleadosController();
-        $rows = $controller->get_empleados();
+        $rows = $controller->get_empleados($filters);
         $response->getBody()->write($rows->toJson());
         return $response->withHeader("Content-Type", "application/json");
     }
@@ -42,9 +55,17 @@ class EmpleadoRepository
             $row = $controller->update($id, $data);
             $response->getBody()->write($row->toJson());
             return $response->withHeader("Content-Type", "application/json");
+        } catch (\DomainException $ex) {
+            return $this->conflictResponse($response, $ex);
         } catch (ModelNotFoundException $ex) {
             return $response->withStatus(404);
         }
+    }
+
+    private function conflictResponse(Response $response, \DomainException $ex): Response
+    {
+        $response->getBody()->write(json_encode(["error" => $ex->getMessage()]));
+        return $response->withStatus(409)->withHeader("Content-Type", "application/json");
     }
 
 

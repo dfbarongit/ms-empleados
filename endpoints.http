@@ -1,11 +1,15 @@
-### Iniciar sesión con usuario o correo
+### Listar todos los empleados
 GET http://127.0.0.1:8000/empleados
-Content-Type: application/json
 
-{
-  "usuario": "usuario_existente",
-  "contrasena": "contraseña"
-}
+### Buscar empleados por documento
+GET http://127.0.0.1:8000/empleados?documento=1000123456
+
+### Filtrar por area y estado (los filtros se combinan con AND)
+GET http://127.0.0.1:8000/empleados?area=Tecnologia&estado=activo
+
+### Filtrar por documento, area y estado
+GET http://127.0.0.1:8000/empleados?documento=1000123456&area=Tecnologia&estado=activo
+
 ### Crear un nuevo empleado
 POST http://127.0.0.1:8000/empleados
 Content-Type: application/json
@@ -18,20 +22,28 @@ Content-Type: application/json
   "telefono": "12345",
   "cargo": "miCargo",
   "area": "miArea",
-  "fecha_ingreso": "2024-07-14",
+  "fecha_ingreso": "2024-07-14"
+}
+# Responde 409 Conflict si el documento o correo ya existe.
+
+###editar Empleado por id
+PUT http://127.0.0.1:8000/empleados/1
+Content-Type: application/json
+
+{
+  "nombres": "Carlos",
+  "apellidos": "Ramirez",
+  "documento": "1000123456",
+  "correo": "carlos@empresa.com",
+  "telefono": "3001234567",
+  "cargo": "Analista",
+  "area": "Tecnologia",
+  "estado": "activo"
 }
 
-POST http://127.0.0.1:8000/empleados/1
+###Cambiar estado por id
+PUT http://127.0.0.1:8000/empleados/1/estado
 
-POST http://127.0.0.1:8000/empleados/1/estado
-
-### Validar sesión (pega el token recibido)
-GET http://127.0.0.1:8000/auth/validate
-Authorization: Bearer 19007215e8cbdbde5a7c32fd7fa7b02178c27ca42091b4181380ba8b4855c0e0
-
-### Cerrar sesión (después de esto, el paso 2 debe dar 401)
-POST http://127.0.0.1:8000/auth/logout
-Authorization: Bearer 19007215e8cbdbde5a7c32fd7fa7b02178c27ca42091b4181380ba8b4855c0e0
 
 ###hola mundo
 GET http://127.0.0.1:8000/
